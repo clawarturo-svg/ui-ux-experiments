@@ -1,0 +1,46 @@
+{
+  "id": "dark-editorial-rain",
+  "name": "Dark Editorial Rain",
+  "status": "active",
+  "summary": "Premium dark landing with large editorial typography, glassy cards, muted lavender/cyan accents, and animated rain-like background lines.",
+  "use_cases": [
+    "AI products",
+    "design studios",
+    "agent dashboards",
+    "premium product landings"
+  ],
+  "visual_traits": {
+    "background": "Very dark black/purple gradient with atmospheric animated lines",
+    "typography": "Huge editorial hero, tight tracking, strong contrast",
+    "cards": "Rounded glassmorphism cards with subtle borders and shadow",
+    "color_palette": ["#07070b", "#11111a", "#cdb9ff", "#67d6ff", "#f6f2ff"],
+    "motion": "Soft animated rain/streaks in the background",
+    "density": "Medium density, premium spacing, breathing room"
+  },
+  "layout_traits": {
+    "hero": "Centered giant headline + concise supporting paragraph",
+    "top_grid": "3-card asymmetrical intro grid",
+    "sections": [
+      "featured work",
+      "design principles",
+      "notes/testimonial split",
+      "CTA footer"
+    ],
+    "navigation": "Simple top nav with small links and one pill CTA"
+  },
+  "dos": [
+    "Use bold hero typography",
+    "Keep copy concise and premium",
+    "Use subtle glow/accent effects",
+    "Prefer dark cards over flat sections",
+    "Maintain strong contrast for readability"
+  ],
+  "donts": [
+    "Do not overcrowd the page",
+    "Do not use playful/cartoony UI",
+    "Do not add bright neon everywhere",
+    "Do not break the calm premium tone"
+  ],
+  "template_path": "templates/landing-dark-editorial/index.html",
+  "notes": "Good default style when Sebastian wants something that feels premium, futuristic, dark, and polished."
+}
