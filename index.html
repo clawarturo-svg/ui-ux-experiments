@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UI/UX Experiments</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07070b;
+      --panel: rgba(18,18,24,0.74);
+      --panel-border: rgba(255,255,255,0.08);
+      --text: #f6f2ff;
+      --muted: #aaa6ba;
+      --accent: #cdb9ff;
+      --accent-2: #67d6ff;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: radial-gradient(circle at top, #11111a 0%, #07070b 42%, #050508 100%); color: var(--text); font-family: Inter, system-ui, sans-serif; }
+    body { overflow-x: hidden; }
+    canvas#rain { position: fixed; inset: 0; z-index: 0; opacity: .55; pointer-events: none; }
+    .shell { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 18px 18px 72px; }
+    .nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 6px 22px; }
+    .brand { font-weight: 800; letter-spacing: -0.03em; }
+    .nav-links { display: flex; gap: 18px; align-items: center; color: var(--muted); font-size: 14px; }
+    .nav-links a { color: inherit; text-decoration: none; }
+    .pill { padding: 10px 16px; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; background: rgba(255,255,255,.04); color: var(--text); }
+    .hero { text-align: center; padding: 28px 12px 22px; }
+    .hero h1 { margin: 0 auto 18px; max-width: 780px; font-size: clamp(48px, 8vw, 88px); line-height: .94; letter-spacing: -0.06em; }
+    .hero p { margin: 0 auto; max-width: 760px; color: var(--muted); font-size: clamp(16px, 2vw, 20px); line-height: 1.6; }
+    .grid-top { display: grid; grid-template-columns: 1.2fr .95fr .95fr; gap: 16px; margin-top: 42px; }
+    .card { background: var(--panel); border: 1px solid var(--panel-border); border-radius: 26px; padding: 22px; backdrop-filter: blur(10px); box-shadow: var(--shadow); position: relative; overflow: hidden; }
+    .card .eyebrow { color: #d7c9ff; font-size: 12px; text-transform: uppercase; letter-spacing: .16em; margin-bottom: 14px; }
+    .card h3 { margin: 0 0 12px; font-size: clamp(28px, 4vw, 44px); line-height: 1; letter-spacing: -0.04em; }
+    .card p { margin: 0; color: var(--muted); line-height: 1.65; }
+    .actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+    .btn { border: 1px solid rgba(255,255,255,.12); border-radius: 999px; background: rgba(255,255,255,.05); color: var(--text); padding: 12px 18px; text-decoration: none; font-weight: 600; }
+    .btn.primary { background: linear-gradient(90deg, rgba(205,185,255,.18), rgba(103,214,255,.18)); border-color: rgba(205,185,255,.28); }
+    .music-box { margin-top: 18px; border: 1px solid rgba(255,255,255,.08); border-radius: 18px; padding: 16px; background: rgba(255,255,255,.03); }
+    .music-box .track { font-weight: 700; }
+    .music-box .meta { color: var(--muted); margin-top: 6px; font-size: 14px; }
+    .music-box .dot { width: 9px; height: 9px; background: #42ff9c; border-radius: 50%; display: inline-block; box-shadow: 0 0 14px #42ff9c; }
+    section { margin-top: 54px; }
+    .section-title { font-size: clamp(30px, 5vw, 52px); letter-spacing: -0.05em; margin: 0 0 18px; }
+    .work-grid, .principles-grid, .testimonial-grid { display: grid; gap: 16px; }
+    .work-grid { grid-template-columns: repeat(3, 1fr); }
+    .work-card, .principle, .testimonial { background: var(--panel); border: 1px solid var(--panel-border); border-radius: 24px; padding: 20px; box-shadow: var(--shadow); }
+    .work-card h4, .principle h4, .testimonial h4 { margin: 0 0 10px; font-size: 22px; letter-spacing: -0.03em; }
+    .work-card p, .principle p, .testimonial p { margin: 0; color: var(--muted); line-height: 1.65; }
+    .label { display: inline-block; margin-top: 14px; padding: 8px 12px; font-size: 12px; border-radius: 999px; background: rgba(255,255,255,.06); color: #ddd7ef; }
+    .principles-grid { grid-template-columns: repeat(3, 1fr); }
+    .testimonial-grid { grid-template-columns: 1.3fr .7fr; }
+    .cta { text-align: center; padding: 34px 18px; }
+    .cta p { max-width: 640px; margin: 0 auto 20px; color: var(--muted); line-height: 1.7; }
+    footer { margin-top: 40px; color: var(--muted); font-size: 14px; text-align: center; }
+    @media (max-width: 980px) {
+      .grid-top, .work-grid, .principles-grid, .testimonial-grid { grid-template-columns: 1fr; }
+      .hero { padding-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="rain"></canvas>
+  <div class="shell">
+    <nav class="nav">
+      <div class="brand">ui/ux experiments</div>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#work">Projects</a>
+        <a href="#principles">Principles</a>
+        <a href="#notes">Notes</a>
+        <a class="pill" href="#contact">Let's talk</a>
+      </div>
+    </nav>
+
+    <header class="hero" id="about">
+      <h1>Designing web experiences that feel alive.</h1>
+      <p>We prototype interfaces for modern products, agentic workflows, and software systems — with a focus on clarity, motion, conversion, and product taste.</p>
+    </header>
+
+    <section class="grid-top">
+      <article class="card">
+        <div class="eyebrow">Now</div>
+        <h3>Building interfaces for the next wave of software.</h3>
+        <p>We are currently focused on AI-native workflows, agent surfaces, product dashboards, and high-trust interaction models for tools people actually want to use.</p>
+        <div class="actions">
+          <a class="btn primary" href="#work">Explore projects</a>
+          <a class="btn" href="#notes">View the process</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="eyebrow">On the radar</div>
+        <h3>Multi-agent product systems</h3>
+        <p>How interfaces adapt when the product is no longer a single flow, but a conversation between orchestrators, specialized agents, approvals, and visible evidence.</p>
+      </article>
+
+      <article class="card">
+        <div class="eyebrow">Listening</div>
+        <h3>Signal over noise</h3>
+        <p>The design question is not just what looks modern. It is what helps a human trust, understand, and steer a complex system without friction.</p>
+        <div class="music-box">
+          <div class="track">Interface pulses</div>
+          <div class="meta">Ambient system mood · <span class="dot"></span> live</div>
+        </div>
+      </article>
+    </section>
+
+    <section id="work">
+      <h2 class="section-title">Featured work</h2>
+      <div class="work-grid">
+        <article class="work-card">
+          <h4>Agent Command Center</h4>
+          <p>A dashboard concept for supervising multiple AI operators, with visible state, approvals, and output artifacts rather than opaque chats.</p>
+          <div class="label">Control UI</div>
+        </article>
+        <article class="work-card">
+          <h4>Conversion-first Landing System</h4>
+          <p>A hero-to-proof structure designed to explain technically dense products fast, while still preserving premium aesthetics and narrative flow.</p>
+          <div class="label">Growth + UX</div>
+        </article>
+        <article class="work-card">
+          <h4>Realtime Product Surfaces</h4>
+          <p>Experiments around live data, streaming states, multi-step feedback, and visual trust cues for systems that think and act continuously.</p>
+          <div class="label">Realtime UX</div>
+        </article>
+      </div>
+    </section>
+
+    <section id="principles">
+      <h2 class="section-title">Design principles</h2>
+      <div class="principles-grid">
+        <article class="principle">
+          <h4>Clarity first</h4>
+          <p>Dense products need stronger visual hierarchy, not more explanation. We reduce ambiguity before we add detail.</p>
+        </article>
+        <article class="principle">
+          <h4>Motion with intent</h4>
+          <p>Animations should orient, frame, and support attention — never just decorate. Background systems should feel alive, not noisy.</p>
+        </article>
+        <article class="principle">
+          <h4>Evidence builds trust</h4>
+          <p>For AI and technical tools, UX improves when outputs are inspectable: diffs, logs, previews, snapshots, not just claims.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="notes">
+      <h2 class="section-title">Notes from the lab</h2>
+      <div class="testimonial-grid">
+        <article class="testimonial">
+          <h4>What modern product teams need</h4>
+          <p>Teams are shipping faster, but many interfaces still feel static while the systems beneath them become increasingly dynamic. The opportunity is to make products feel understandable again — especially when AI, automation, and orchestration are involved.</p>
+        </article>
+        <article class="testimonial">
+          <h4>What we optimize for</h4>
+          <p>Speed to clarity. Better information density. Stronger interaction confidence. Interfaces that look sharp and explain themselves quickly.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="card cta" id="contact">
+      <h2 class="section-title" style="margin-top:0">Let’s design something people want to use.</h2>
+      <p>From landing pages to agent dashboards, we build interfaces that feel premium, modern, and easier to understand than the systems behind them usually are.</p>
+      <a class="btn primary" href="mailto:hello@example.com">Start a conversation</a>
+    </section>
+
+    <footer>
+      ui/ux experiments · experimental interface systems · 2026
+    </footer>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('rain');
+    const ctx = canvas.getContext('2d');
+    let w, h, drops;
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      drops = Array.from({length: Math.floor(w / 26)}, () => ({
+        x: Math.random() * w,
+        y: Math.random() * -h,
+        len: 20 + Math.random() * 80,
+        speed: 2 + Math.random() * 4,
+        alpha: 0.12 + Math.random() * 0.45
+      }));
+    }
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (const d of drops) {
+        const grad = ctx.createLinearGradient(d.x, d.y, d.x, d.y + d.len);
+        grad.addColorStop(0, `rgba(103,214,255,0)`);
+        grad.addColorStop(1, `rgba(103,214,255,${d.alpha})`);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(d.x, d.y);
+        ctx.lineTo(d.x - 4, d.y + d.len);
+        ctx.stroke();
+        d.y += d.speed;
+        if (d.y > h + 40) {
+          d.y = -80;
+          d.x = Math.random() * w;
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+    resize();
+    draw();
+    window.addEventListener('resize', resize);
+  </script>
+</body>
+</html>
